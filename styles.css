@@ -1,0 +1,523 @@
+/* Shared styles for every screen.
+   Each screen is a 1440 x 1024 frame, positioned to match the Figma file. */
+
+:root {
+  --black: #000;
+  --white: #fff;
+  --header-bg: #d9d9d9;
+  --band-bg: #e0e0e0;
+  --tile-active: #959595;
+  --accent: rgba(181, 220, 229, 0.74);
+  --feed: #e688f3;
+  --star: #b3262e;
+  --line: #e4e4e4;
+  --finish-off: #d2d2d2;
+  --finish-on: #4ef56e;
+  --toast: #07dc4e;
+  --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-label: "SF Pro Display", -apple-system, "Segoe UI", system-ui, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--black);
+  background: var(--white);
+}
+
+.page {
+  position: relative;
+  width: 1440px;
+  height: 1024px;
+  overflow: hidden;
+  background: var(--white);
+}
+
+/* ---------- Top bar ---------- */
+
+.top-nav {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1440px;
+  height: 208px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--black);
+}
+
+.nav-tile {
+  position: absolute;
+  top: 30px;
+  width: 269px;
+  height: 159px;
+  border: 1px solid var(--black);
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  text-decoration: none;
+  color: var(--black);
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 40px;
+}
+
+.nav-tile--home { left: 115px; }
+.nav-tile--tasks { left: 443px; }
+.nav-tile--notes { left: 771px; }
+.nav-tile.is-active { background: var(--tile-active); }
+
+.nav-icon {
+  display: block;
+  fill: #000;
+}
+.nav-icon--home { width: 116px; height: 67px; }
+.nav-icon--tasks { width: 62px; height: 88px; }
+.nav-icon--notes {
+  width: 61px;
+  height: 61px;
+  fill: none;
+  stroke: #000;
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.profile {
+  position: absolute;
+  left: 1068px;
+  top: 0;
+  width: 372px;
+  height: 208px;
+}
+
+.avatar {
+  position: absolute;
+  left: 31px;
+  top: 31px;
+  width: 147px;
+  height: 147px;
+}
+
+.thumb {
+  position: absolute;
+  left: 84px;
+  top: 36px;
+  width: 84px;
+  height: 84px;
+}
+
+.level {
+  position: absolute;
+  left: 195px;
+  top: 36px;
+  margin: 0;
+  font-size: 30px;
+  line-height: normal;
+}
+
+.feed-btn {
+  position: absolute;
+  left: 185px;
+  top: 117px;
+  width: 122px;
+  height: 52px;
+  background: var(--feed);
+  border: 1px solid var(--black);
+  font-family: var(--font);
+  font-size: 30px;
+  color: var(--black);
+  cursor: pointer;
+}
+
+.xp {
+  position: absolute;
+  left: 227px;
+  top: 173px;
+  font-size: 20px;
+}
+
+/* ---------- Generic blocks ---------- */
+
+.panel {
+  position: absolute;
+  background: var(--white);
+  border: 1px solid var(--black);
+}
+
+.band {
+  position: absolute;
+  left: 0;
+  width: 1440px;
+  background: var(--band-bg);
+  border: 1px solid var(--black);
+}
+
+.divider-v {
+  position: absolute;
+  width: 0;
+  border-left: 1px solid var(--black);
+}
+
+.divider-h {
+  position: absolute;
+  height: 0;
+  border-top: 1px solid var(--black);
+}
+
+/* Large headings and labels (SF-style, 40px) */
+.title {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 40px;
+  white-space: nowrap;
+}
+
+/* Smaller list and section text (Inter, 30px) */
+.text {
+  position: absolute;
+  margin: 0;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 30px;
+  line-height: 30px;
+  white-space: nowrap;
+}
+
+/* Blue category / note cards */
+.cell {
+  position: absolute;
+  width: 666px;
+  height: 90px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  padding-left: 22px;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 30px;
+  white-space: nowrap;
+}
+
+/* ---------- Buttons ---------- */
+
+.add-btn {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 54px;
+  padding: 0 12px 0 10px;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--black);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.add-btn--sm {
+  width: 209px;
+  padding: 0 10px 0 8px;
+  font-size: 20px;
+  line-height: 1.1;
+  white-space: normal;
+}
+
+.add-btn--wrap {
+  width: 215px;
+  height: 56px;
+}
+
+.add-btn--sm .add-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.add-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.finish {
+  position: absolute;
+  width: 459px;
+  height: 125px;
+  border: none;
+  border-radius: 20px;
+  background: var(--finish-off);
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 45px;
+  line-height: 1.1;
+  color: var(--black);
+  padding: 0 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.finish.is-on {
+  background: var(--finish-on);
+}
+
+/* ---------- Dropdowns (checkable lists, open/close on click) ---------- */
+
+.dropdown {
+  position: absolute;
+  width: 260px;
+  height: 52px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.dropdown--lg {
+  width: 449px;
+  height: 70px;
+}
+
+.dropdown summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 14px;
+  font-family: var(--font);
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dropdown--lg summary {
+  font-size: 32px;
+}
+
+.dropdown summary::-webkit-details-marker {
+  display: none;
+}
+
+.dropdown summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-left: 12px;
+  flex-shrink: 0;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  transform: rotate(45deg) translateY(-3px);
+}
+
+.dropdown[open] summary::after {
+  transform: rotate(225deg) translateY(-3px);
+}
+
+.dropdown ul {
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  right: -1px;
+  margin: 0;
+  padding: 8px 14px;
+  list-style: none;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 0 0 10px 10px;
+  z-index: 10;
+}
+
+.dropdown li {
+  padding: 6px 0;
+}
+
+.dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.dropdown input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+/* ---------- Checkable rows ("Check box Label" + red star) ---------- */
+
+.row {
+  position: absolute;
+  width: 380px;
+  height: 73px;
+  cursor: pointer;
+}
+
+.task-check {
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 62px;
+  height: 62px;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid var(--black);
+  background: var(--white);
+  cursor: pointer;
+}
+
+.task-check:checked {
+  background: var(--black);
+}
+
+.row-label {
+  position: absolute;
+  left: 82px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font);
+  font-size: 30px;
+  white-space: nowrap;
+}
+
+.star {
+  position: absolute;
+  left: 345px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 35px;
+  height: 32px;
+}
+
+.star path,
+.dstar path {
+  fill: none;
+  stroke: var(--star);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.dstar.on path {
+  fill: var(--star);
+}
+
+/* Difficulty stars on the add forms */
+.stars {
+  position: absolute;
+  display: flex;
+  gap: 11px;
+}
+
+.dstar {
+  width: 35px;
+  height: 32px;
+}
+
+/* ---------- Task and note cards ---------- */
+
+.card {
+  position: absolute;
+  width: 683px;
+  background: var(--white);
+  border: 1px solid var(--black);
+}
+
+.card-title {
+  margin: 0;
+  height: 64px;
+  padding-left: 25px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--black);
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 30px;
+  white-space: nowrap;
+}
+
+/* ---------- Form fields ---------- */
+
+.field {
+  position: absolute;
+  background: var(--white);
+  border: 2px solid var(--black);
+  font-family: var(--font);
+  font-size: 40px;
+  font-weight: 600;
+  padding: 0 10px;
+  outline: none;
+}
+
+.field--line {
+  width: 630px;
+  height: 68px;
+}
+
+.field--area {
+  width: 630px;
+  height: 411px;
+  padding: 10px;
+  resize: none;
+  line-height: 1.25;
+}
+
+.field--filled {
+  font-size: 45px;
+}
+
+/* ---------- Toast messages ---------- */
+
+.toast {
+  position: absolute;
+  top: 7px;
+  width: 602px;
+  height: 173px;
+  background: var(--toast);
+  border: 1px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 40px;
+}
+
+.toast-x {
+  position: absolute;
+  right: 18px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 34px;
+  color: var(--black);
+  cursor: pointer;
+}
+
+/* ---------- Homepage notes ---------- */
+
+.note-list {
+  position: absolute;
+  left: 0;
+  top: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
