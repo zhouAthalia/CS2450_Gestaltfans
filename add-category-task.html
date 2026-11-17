@@ -39,9 +39,9 @@
   <!-- Left column -->
   <h2 class="title" style="left:50px;top:283px">Add New Category</h2>
   <h2 class="title" style="left:50px;top:371px">Category Name*</h2>
-  <input class="field field--line" style="left:50px;top:427px" aria-label="Category name">
+  <input id="category-name" class="field field--line" style="left:50px;top:427px" aria-label="Category name" required>
   <h2 class="title" style="left:50px;top:564px">Category Details</h2>
-  <textarea class="field field--area" style="left:50px;top:630px;width:630px;height:356px" aria-label="Category details"></textarea>
+  <textarea id="category-details" class="field field--area" style="left:50px;top:630px;width:630px;height:356px" aria-label="Category details"></textarea>
 
   <!-- Right column -->
   <h2 class="title" style="left:804px;top:309px">Select Tasks</h2>
@@ -58,8 +58,9 @@
     <span>Add New Task</span>
   </button>
 
-  <button class="finish" type="button" style="left:804px;top:727px" onclick="location.href='add-category-task-complete.html'">Finish Adding Category</button>
+  <button id="finish-category" class="finish" type="button" style="left:804px;top:727px">Finish Adding Category</button>
 
 </main>
+<script src="app.js"></script>
 </body>
 </html>

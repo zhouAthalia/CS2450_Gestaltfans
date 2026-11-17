@@ -38,9 +38,9 @@
 
   <!-- Left column -->
   <h2 class="title" style="left:69px;top:262px">Task Name *</h2>
-  <input class="field field--line" style="left:69px;top:331px" aria-label="Task name">
+  <input id="task-name" class="field field--line" style="left:69px;top:331px" aria-label="Task name" required>
   <h2 class="title" style="left:79px;top:457px">Task Details</h2>
-  <textarea class="field field--area" style="left:69px;top:521px" aria-label="Task details"></textarea>
+  <textarea id="task-details" class="field field--area" style="left:69px;top:521px" aria-label="Task details"></textarea>
 
   <!-- Right column -->
   <h2 class="title" style="left:813px;top:262px">Difficulty</h2>
@@ -60,14 +60,15 @@
   <details class="dropdown dropdown--lg" style="left:813px;top:510px">
     <summary>Select Filter</summary>
     <ul>
-      <li><label><input type="checkbox"> Category 1</label></li>
-      <li><label><input type="checkbox"> Category 2</label></li>
-      <li><label><input type="checkbox"> Category 3</label></li>
+      <li><label><input type="checkbox" data-task-category="Category 1"> Category 1</label></li>
+      <li><label><input type="checkbox" data-task-category="Category 2"> Category 2</label></li>
+      <li><label><input type="checkbox" data-task-category="Category 3"> Category 3</label></li>
     </ul>
   </details>
 
-  <button class="finish" type="button" style="left:813px;top:727px" onclick="location.href='add-task-complete.html'">Finish Adding Task</button>
+  <button id="finish-task" class="finish" type="button" style="left:813px;top:727px">Finish Adding Task</button>
 
 </main>
+<script src="app.js"></script>
 </body>
 </html>
