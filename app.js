@@ -57,7 +57,7 @@ function initializeAddTaskPage() {
     });
 
     saveTasks(tasks);
-    window.location.href = "tasks.html?added=1";
+    window.location.href = "tasks_page.html?added=1";
   });
 }
 
@@ -194,7 +194,7 @@ function initializeAddCategoryPage() {
     });
 
     saveCategories(categories);
-    window.location.href = "tasks.html?categoryAdded=1";
+    window.location.href = "tasks_page.html?categoryAdded=1";
   });
 }
 
