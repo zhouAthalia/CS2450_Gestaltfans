@@ -791,3 +791,60 @@ body {
 /* Keep saved-task checkboxes a sensible size inside .columns */
 .columns .saved-task-row .task-check { flex: 0 0 40px; width: 40px; height: 40px; }
 .columns .saved-task-row .task-check::after { font-size: 28px; }
+
+/* ---------- Saved notes workflow ---------- */
+.columns .note-list {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: auto;
+  height: auto;
+  padding: 0 24px 24px;
+}
+
+.saved-note-card {
+  width: 100%;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.saved-note-card:hover,
+.saved-note-card:focus-visible {
+  background: var(--accent);
+}
+
+.saved-note-title {
+  font-size: 26px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.saved-note-details,
+.saved-note-category {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.note-confirmation {
+  padding: 18px;
+  border: 1px solid var(--black);
+  background: var(--toast);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.note-empty {
+  margin: 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+}

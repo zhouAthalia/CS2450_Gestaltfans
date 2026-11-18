@@ -1,5 +1,6 @@
 const TASKS_KEY = "gestaltfans.tasks";
 const CATEGORIES_KEY = "gestaltfans.taskCategories";
+const NOTES_KEY = "gestaltfans.notes";
 
 function loadTasks() {
   return JSON.parse(localStorage.getItem(TASKS_KEY) || "[]");
@@ -15,6 +16,127 @@ function loadCategories() {
 
 function saveCategories(categories) {
   localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
+}
+
+function loadNotes() {
+  return JSON.parse(localStorage.getItem(NOTES_KEY) || "[]");
+}
+
+function saveNotes(notes) {
+  localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+function initializeAddNotePage() {
+  const finishButton = document.querySelector("#finish-note");
+  const titleInput = document.querySelector("#note-name");
+  const detailsInput = document.querySelector("#note-details");
+  if (!finishButton || !titleInput || !detailsInput) return;
+
+  const noteId = new URLSearchParams(window.location.search).get("id");
+  const notes = loadNotes();
+  const noteToEdit = noteId ? notes.find((note) => String(note.id) === noteId) : null;
+  let difficulty = noteToEdit?.difficulty || 0;
+  const stars = [...document.querySelectorAll(".dstar")];
+
+  if (noteToEdit) {
+    document.title = "Edit Note";
+    document.querySelector("#note-form-heading").textContent = "Edit Note";
+    finishButton.textContent = "Save Changes";
+    titleInput.value = noteToEdit.title || "";
+    detailsInput.value = noteToEdit.details || "";
+    const selectedCategories = Array.isArray(noteToEdit.categories) ? noteToEdit.categories : [];
+    document.querySelectorAll("[data-note-category]").forEach((checkbox) => {
+      checkbox.checked = selectedCategories.includes(checkbox.dataset.noteCategory);
+    });
+  }
+
+  stars.forEach((star, index) => {
+    star.addEventListener("click", () => {
+      difficulty = index + 1;
+      stars.forEach((item, itemIndex) => item.classList.toggle("on", itemIndex < difficulty));
+    });
+    star.classList.toggle("on", index < difficulty);
+  });
+
+  finishButton.addEventListener("click", () => {
+    const title = titleInput.value.trim();
+    if (!title) {
+      titleInput.reportValidity();
+      return;
+    }
+
+    const categories = [...document.querySelectorAll("[data-note-category]")]
+      .filter((checkbox) => checkbox.checked)
+      .map((checkbox) => checkbox.dataset.noteCategory);
+
+    const note = {
+      id: noteToEdit ? noteToEdit.id : Date.now(),
+      title,
+      details: detailsInput.value.trim(),
+      difficulty,
+      categories
+    };
+
+    const updatedNotes = noteToEdit
+      ? notes.map((savedNote) => savedNote.id === noteToEdit.id ? note : savedNote)
+      : [...notes, note];
+
+    saveNotes(updatedNotes);
+    window.location.href = "notes_page.html?saved=1";
+  });
+}
+
+function initializeNotesPage() {
+  const noteList = document.querySelector("#note-list");
+  if (!noteList) return;
+
+  const notes = loadNotes();
+  noteList.replaceChildren();
+
+  if (new URLSearchParams(window.location.search).has("saved")) {
+    const confirmation = document.createElement("div");
+    confirmation.className = "note-confirmation";
+    confirmation.textContent = "Note saved successfully!";
+    noteList.appendChild(confirmation);
+  }
+
+  if (notes.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "note-empty";
+    empty.textContent = "No notes have been added yet.";
+    noteList.appendChild(empty);
+    return;
+  }
+
+  notes.forEach((note) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "saved-note-card";
+    card.addEventListener("click", () => {
+      window.location.href = `add-note.html?id=${encodeURIComponent(note.id)}`;
+    });
+
+    const title = document.createElement("span");
+    title.className = "saved-note-title";
+    title.textContent = note.title;
+    card.appendChild(title);
+
+    if (note.details) {
+      const details = document.createElement("span");
+      details.className = "saved-note-details";
+      details.textContent = note.details;
+      card.appendChild(details);
+    }
+
+    if (Array.isArray(note.categories) && note.categories.length > 0) {
+      const category = document.createElement("span");
+      category.className = "saved-note-category";
+      category.textContent = `Category: ${note.categories.join(", ")}`;
+      card.appendChild(category);
+    }
+
+    noteList.appendChild(card);
+  });
 }
 
 function initializeAddTaskPage() {
@@ -57,6 +179,7 @@ function initializeAddTaskPage() {
     });
 
     saveTasks(tasks);
+    // Return to the actual tasks page after saving the task.
     window.location.href = "tasks_page.html?added=1";
   });
 }
@@ -194,14 +317,17 @@ function initializeAddCategoryPage() {
     });
 
     saveCategories(categories);
+    // Return to the actual tasks page after saving the category.
     window.location.href = "tasks_page.html?categoryAdded=1";
   });
 }
 
 function initializeApp() {
+  initializeAddNotePage();
   initializeAddTaskPage();
   initializeAddCategoryPage();
   initializeTaskPage();
+  initializeNotesPage();
 }
 
 if (document.readyState === "loading") {
