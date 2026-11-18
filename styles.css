@@ -103,6 +103,17 @@ body {
   overflow-wrap: anywhere;
 }
 
+.saved-task-difficulty {
+    margin: 6px 0 0 76px;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #bdbdbd;
+}
+
+.saved-task-difficulty .filled {
+    color: var(--star);
+}
+
 .saved-task-details,
 .saved-task-category {
   margin: 6px 0 0 76px;

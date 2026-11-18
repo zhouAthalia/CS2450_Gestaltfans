@@ -177,7 +177,9 @@ function initializeAddTaskPage() {
 
     //keep track of difficulty stars the user selected
     let difficulty = 0;
-    const stars = document.querySelectorAll("[data-difficulty]");
+
+    //find the five difficulty stars on the task form
+    const stars = document.querySelectorAll(".dstar");
 
     stars.forEach((star, index) => {
         star.addEventListener("click", () => {
@@ -307,6 +309,17 @@ function initializeTaskPage() {
         title.textContent = task.title;
         title.classList.toggle("completed-task", task.completed);
 
+        const difficulty = document.createElement("div");
+        difficulty.className = "saved-task-difficulty";
+        difficulty.setAttribute("aria-label", `Difficulty: ${task.difficulty || 0} out of 5`);
+
+        for (let index = 0; index < 5; index++) {
+            const star = document.createElement("span");
+            star.textContent = "★";
+            star.className = index < (task.difficulty || 0) ? "filled" : "";
+            difficulty.appendChild(star);
+        }
+
         checkbox.addEventListener("change", () => {
             //save new completion state when checkbox changes
             task.completed = checkbox.checked;
@@ -316,6 +329,7 @@ function initializeTaskPage() {
 
         row.append(checkbox, title);
         card.appendChild(row);
+        card.appendChild(difficulty);
 
         if (task.details) {
             const details = document.createElement("p");
