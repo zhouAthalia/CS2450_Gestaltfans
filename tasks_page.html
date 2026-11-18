@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="page">
+
+  <header class="top-nav">
+    <nav aria-label="Main">
+      <a class="nav-tile nav-tile--home" href="home_page.html">
+        <svg class="nav-icon nav-icon--home" viewBox="0 0 116 67" aria-hidden="true"><path d="M58 2 2 40h12v26h30V46h28v20h30V40h12z"/></svg>
+        <span>Home</span>
+      </a>
+      <a class="nav-tile nav-tile--tasks is-active" href="tasks_page.html" aria-current="page">
+        <svg class="nav-icon nav-icon--tasks" viewBox="0 0 62 88" aria-hidden="true"><rect x="24" width="14" height="58" rx="5"/><circle cx="31" cy="76" r="8"/></svg>
+        <span>Tasks</span>
+      </a>
+      <a class="nav-tile nav-tile--notes" href="notes_page.html">
+        <svg class="nav-icon nav-icon--notes" viewBox="0 0 61 61" aria-hidden="true"><rect x="8" y="8" width="40" height="50" rx="3"/><path d="M14 2v12M24 2v12M34 2v12M15 24h21M15 34h17M40 40l14-14 4 4-14 14-6 2z"/></svg>
+        <span>Notes</span>
+      </a>
+    </nav>
+    <div class="profile">
+      <img class="avatar" src="Assets\among-us-6008615_1920.png" alt="Avatar">      
+      <p class="level">Luna<br>Lvl 20</p>
+      <button class="feed-btn" type="button">Feed</button>
+      <span class="xp">0/10</span>
+    </div>
+  </header>
+
+  <!-- Filter bar -->
+    <div class="filter-bar">
+    <h2 class="title">Filter Tasks</h2>
+    <details class="dropdown">
+      <summary>Select Filter</summary>
+      <ul>
+        <li><label><input type="checkbox"> Recommended</label></li>
+        <li><label><input type="checkbox"> Due soon</label></li>
+        <li><label><input type="checkbox"> Completed</label></li>
+      </ul>
+    </details>
+  </div>
+
+  <div class="columns">
+
+    <section class="col col-tasks">
+      <div class="col-header">
+        <h2 class="title">Tasks</h2>
+        <button class="add-btn" type="button" onclick="location.href='add-task.html'">
+          <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+          <span>Add Task</span>
+        </button>
+      </div>
+      <!-- Saved tasks are inserted here by app.js. -->
+      <div id="task-list" class="task-list"></div>
+    </section>
+
+    <section class="col">
+      <div class="col-header">
+        <h2 class="title">Categories</h2>
+        <button class="add-btn" type="button" onclick="location.href='add-category-task.html'">
+          <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+          <span>Add New Category</span>
+        </button>
+      </div>
+      <!-- Saved categories are inserted here by app.js. -->
+      <div id="category-list" class="category-list"></div>
+    </section>
+
+  </div>
+
+</main>
+<script src="app.js"></script>
+</body>
+</html>

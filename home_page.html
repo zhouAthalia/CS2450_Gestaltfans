@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="page">
+
+  <header class="top-nav">
+    <nav aria-label="Main">
+      <a class="nav-tile nav-tile--home is-active" href="home_page.html" aria-current="page">
+        <svg class="nav-icon nav-icon--home" viewBox="0 0 116 67" aria-hidden="true"><path d="M58 2 2 40h12v26h30V46h28v20h30V40h12z"/></svg>
+        <span>Home</span>
+      </a>
+      <a class="nav-tile nav-tile--tasks" href="tasks_page.html">
+        <svg class="nav-icon nav-icon--tasks" viewBox="0 0 62 88" aria-hidden="true"><rect x="24" width="14" height="58" rx="5"/><circle cx="31" cy="76" r="8"/></svg>
+        <span>Tasks</span>
+      </a>
+      <a class="nav-tile nav-tile--notes" href="notes_page.html">
+        <svg class="nav-icon nav-icon--notes" viewBox="0 0 61 61" aria-hidden="true"><rect x="8" y="8" width="40" height="50" rx="3"/><path d="M14 2v12M24 2v12M34 2v12M15 24h21M15 34h17M40 40l14-14 4 4-14 14-6 2z"/></svg>
+        <span>Notes</span>
+      </a>
+    </nav>
+    <div class="profile">
+      <img class="avatar" src="Assets\among-us-6008615_1920.png" alt="Avatar">      
+      <p class="level">Luna<br>Lvl 20</p>
+      <button class="feed-btn" type="button">Feed</button>
+      <span class="xp">0/10</span>
+    </div>
+  </header>
+
+  <!-- Section headers -->
+  <div class="columns">
+
+  <section class="col col-tasks">
+    <div class="col-header">
+      <h1 class="title">Tasks</h1>
+      <button class="add-btn" type="button" onclick="location.href='add-task.html'">
+        <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        <span>Add Task</span>
+      </button>
+    </div>
+
+    <div class="task-group">
+      <p class="text">Recommended study:</p>
+      <p class="text">10/11/2026</p>
+      <label class="row">
+        <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
+        <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
+      </label>
+    </div>
+
+    <div class="task-group">
+      <p class="text">Due soon:</p>
+      <p class="text">10/11/2026</p>
+      <label class="row">
+        <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
+        <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
+      </label>
+      <p class="text">10/12/2026</p>
+      <label class="row">
+        <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
+        <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
+      </label>
+    </div>
+  </section>
+
+  <section class="col col-notes">
+    <div class="col-header">
+      <h1 class="title">Notes</h1>
+      <button class="add-btn" type="button" onclick="location.href='add-note.html'">
+        <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        <span>Add Note</span>
+      </button>
+    </div>
+    <div class="cell">Note #1 (catagory 1)</div>
+    <div class="cell">Note #1 (catagory 1)</div>
+    <div class="cell">Note #1 (catagory 1)</div>
+    <div class="cell">Note #1 (catagory 1)</div>
+  </section>
+
+</div>
+ 
+</main>
+</body>
+</html>
