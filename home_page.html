@@ -36,47 +36,57 @@
   </header>
 
   <!-- Section headers -->
-  <div class="panel" style="left:0;top:209px;width:1440px;height:98px"></div>
-  <h1 class="title" style="left:41px;top:243px">Tasks</h1>
-  <h1 class="title" style="left:790px;top:243px">Notes</h1>
-  <button class="add-btn" type="button" style="left:415px;top:231px" onclick="location.href='add-task.html'">
-    <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
-    <span>Add Task</span>
-  </button>
-  <button class="add-btn" type="button" style="left:1140px;top:231px" onclick="location.href='add-note.html'">
-    <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
-    <span>Add Note</span>
-  </button>
+  <div class="columns">
 
-  <div class="divider-v" style="left:720px;top:208px;height:816px"></div>
-  <div class="divider-h" style="left:0;top:576px;width:720px"></div>
+  <section class="col col-tasks">
+    <div class="col-header">
+      <h1 class="title">Tasks</h1>
+      <button class="add-btn" type="button" onclick="location.href='add-task.html'">
+        <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        <span>Add Task</span>
+      </button>
+    </div>
 
-  <!-- Tasks -->
-  <p class="text" style="left:21px;top:322px">Recommended study :</p>
-  <p class="text" style="left:21px;top:393px">10/11/2026</p>
-  <label class="row" style="left:21px;top:454px">
-    <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
-    <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
-  </label>
+    <div class="task-group">
+      <p class="text">Recommended study:</p>
+      <p class="text">10/11/2026</p>
+      <label class="row">
+        <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
+        <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
+      </label>
+    </div>
 
-  <p class="text" style="left:17px;top:619px">Due soon:</p>
-  <p class="text" style="left:17px;top:691px">10/11/2026</p>
-  <label class="row" style="left:17px;top:752px">
-    <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
-    <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
-  </label>
-  <p class="text" style="left:17px;top:849px">10/12/2026</p>
-  <label class="row" style="left:17px;top:910px">
-    <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
-    <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
-  </label>
+    <div class="task-group">
+      <p class="text">Due soon:</p>
+      <p class="text">10/11/2026</p>
+      <label class="row">
+        <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
+        <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
+      </label>
+      <p class="text">10/12/2026</p>
+      <label class="row">
+        <input type="checkbox" class="task-check"><span class="row-label">Check box Label</span>
+        <svg class="star" viewBox="0 0 35 32" aria-hidden="true"><path d="M17.5 2l4.3 9.3L32 12.4l-7.6 6.9 2.1 10.1-9-5.1-9 5.1 2.1-10.1L3 12.4l10.2-1.1z"/></svg>
+      </label>
+    </div>
+  </section>
 
-  <!-- Notes -->
-  <div class="cell" style="left:736px;top:318px">Note #1 (catagory 1)</div>
-  <div class="cell" style="left:734px;top:446px">Note #1 (catagory 1)</div>
-  <div class="cell" style="left:736px;top:565px">Note #1 (catagory 1)</div>
-  <div class="cell" style="left:734px;top:693px">Note #1 (catagory 1)</div>
+  <section class="col col-notes">
+    <div class="col-header">
+      <h1 class="title">Notes</h1>
+      <button class="add-btn" type="button" onclick="location.href='add-note.html'">
+        <svg class="add-icon" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#1fe21f"/><path d="M17 8v18M8 17h18" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>
+        <span>Add Note</span>
+      </button>
+    </div>
+    <div class="cell">Note #1 (catagory 1)</div>
+    <div class="cell">Note #1 (catagory 1)</div>
+    <div class="cell">Note #1 (catagory 1)</div>
+    <div class="cell">Note #1 (catagory 1)</div>
+  </section>
 
+</div>
+ 
 </main>
 </body>
 </html>
