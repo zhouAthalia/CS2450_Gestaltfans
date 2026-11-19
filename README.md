@@ -9,3 +9,6 @@ Contributors:
 - Adrian Firo
 - Danica Jacutin
 - David Schlarmann
+
+HOW TO OPEN PROTOTYPE
+- simply open home_page.html in a web browser
