@@ -50,6 +50,42 @@ function saveNotes(notes) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
 }
 
+//populate a category dropdown with categories saved by user
+function populateCategoryOptions(listSelector, dataAttribute, selectedCategories = []) {
+    const categoryList = document.querySelector(listSelector);
+    if (!categoryList) return;
+
+    const savedCategories = loadCategories();
+    const categoryNames = [...new Set([
+        ...savedCategories.map((category) => category.name),
+        ...selectedCategories,
+        ...(savedCategories.length === 0 && selectedCategories.length === 0
+            ? ["Category 1", "Category 2", "Category 3"]
+            : [])
+    ])];
+
+    categoryList.replaceChildren();
+
+    categoryNames.forEach((categoryName) => {
+        const item = document.createElement("li");
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset[dataAttribute] = categoryName;
+        checkbox.checked = selectedCategories.includes(categoryName);
+
+        label.append(checkbox, document.createTextNode(` ${categoryName}`));
+        item.appendChild(label);
+        categoryList.appendChild(item);
+    });
+
+    if (categoryNames.length === 0) {
+        const empty = document.createElement("li");
+        empty.textContent = "No categories available yet.";
+        categoryList.appendChild(empty);
+    }
+}
+
 //set up form used for creating new note and editing existing note
 function initializeAddNotePage() {
     //find controls that are only present on add-note.html
@@ -64,6 +100,12 @@ function initializeAddNotePage() {
     const noteToEdit = noteId ? notes.find((note) => String(note.id) === noteId) : null;
     let difficulty = noteToEdit?.difficulty || 0;
     const stars = [...document.querySelectorAll(".dstar")];
+    const selectedCategories = Array.isArray(noteToEdit?.categories)
+        ? noteToEdit.categories
+        : [];
+
+    //use saved categories when creating or editing a note
+    populateCategoryOptions(".dropdown--lg ul", "noteCategory", selectedCategories);
 
     if (noteToEdit) {
         //fill form with selected note's existing values
@@ -72,7 +114,6 @@ function initializeAddNotePage() {
         finishButton.textContent = "Save Changes";
         titleInput.value = noteToEdit.title || "";
         detailsInput.value = noteToEdit.details || "";
-        const selectedCategories = Array.isArray(noteToEdit.categories) ? noteToEdit.categories : [];
         document.querySelectorAll("[data-note-category]").forEach((checkbox) => {
             checkbox.checked = selectedCategories.includes(checkbox.dataset.noteCategory);
         });
