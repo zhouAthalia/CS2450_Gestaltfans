@@ -103,11 +103,50 @@ body {
   overflow-wrap: anywhere;
 }
 
+.saved-task-difficulty {
+    margin: 6px 0 0 76px;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #bdbdbd;
+}
+
+.saved-task-difficulty .filled {
+    color: var(--star);
+}
+
 .saved-task-details,
 .saved-task-category {
   margin: 6px 0 0 76px;
   font-size: 18px;
   overflow-wrap: anywhere;
+}
+
+.saved-task-date {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.task-date-label {
+    position: absolute;
+    left: 813px;
+    top: 600px;
+    font-size: 28px;
+}
+
+.date-field {
+    position: absolute;
+    left: 813px;
+    top: 650px;
+    width: 449px;
+    height: 58px;
+    padding: 0 12px;
+    border: 2px solid var(--black);
+    background: var(--white);
+    color: var(--black);
+    font: inherit;
+    font-size: 24px;
 }
 
 .task-confirmation {
@@ -166,11 +205,55 @@ body {
   margin-bottom: 38px;
   padding: 20px 22px;
   display: flex;
+  justify-content: space-between;
+  gap: 18px;
   align-items: center;
   background: var(--accent);
   font-size: 30px;
   font-weight: 600;
   overflow-wrap: anywhere;
+}
+
+.saved-category-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.saved-item-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.saved-task-actions {
+  margin: 10px 0 0 76px;
+}
+
+.item-action {
+  padding: 7px 12px;
+  border: 1px solid var(--black);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.item-action:hover,
+.item-action:focus-visible {
+  background: var(--header-bg);
+}
+
+.item-action--remove {
+  background: #ffe1e1;
+}
+
+.item-action--remove:hover,
+.item-action--remove:focus-visible {
+  background: #ffc4c4;
 }
 
 .category-confirmation {
@@ -791,3 +874,60 @@ body {
 /* Keep saved-task checkboxes a sensible size inside .columns */
 .columns .saved-task-row .task-check { flex: 0 0 40px; width: 40px; height: 40px; }
 .columns .saved-task-row .task-check::after { font-size: 28px; }
+
+/* ---------- Saved notes workflow ---------- */
+.columns .note-list {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: auto;
+  height: auto;
+  padding: 0 24px 24px;
+}
+
+.saved-note-card {
+  width: 100%;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border: 1px solid var(--black);
+  background: var(--white);
+  color: var(--black);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.saved-note-card:hover,
+.saved-note-card:focus-visible {
+  background: var(--accent);
+}
+
+.saved-note-title {
+  font-size: 26px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.saved-note-details,
+.saved-note-category {
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+
+.note-confirmation {
+  padding: 18px;
+  border: 1px solid var(--black);
+  background: var(--toast);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.note-empty {
+  margin: 20px 0;
+  font-size: 24px;
+  font-weight: 600;
+}

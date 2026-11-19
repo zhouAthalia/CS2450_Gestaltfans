@@ -36,10 +36,10 @@
   </header>
 
   <!-- Left column -->
-  <h2 class="title" style="left:67px;top:262px">Note Name *</h2>
-  <input class="field field--line" style="left:69px;top:331px" aria-label="Note name">
+  <h2 id="note-form-heading" class="title" style="left:67px;top:262px">Note Name *</h2>
+  <input id="note-name" class="field field--line" style="left:69px;top:331px" aria-label="Note name" required>
   <h2 class="title" style="left:76px;top:457px">Note Details</h2>
-  <textarea class="field field--area" style="left:69px;top:521px" aria-label="Note details"></textarea>
+  <textarea id="note-details" class="field field--area" style="left:69px;top:521px" aria-label="Note details"></textarea>
 
   <!-- Right column -->
   <h2 class="title" style="left:813px;top:262px">Difficulty</h2>
@@ -59,14 +59,15 @@
   <details class="dropdown dropdown--lg" style="left:813px;top:510px">
     <summary>Select Category</summary>
     <ul>
-      <li><label><input type="checkbox"> Category 1</label></li>
-      <li><label><input type="checkbox"> Category 2</label></li>
-      <li><label><input type="checkbox"> Category 3</label></li>
+      <li><label><input type="checkbox" data-note-category="Category 1"> Category 1</label></li>
+      <li><label><input type="checkbox" data-note-category="Category 2"> Category 2</label></li>
+      <li><label><input type="checkbox" data-note-category="Category 3"> Category 3</label></li>
     </ul>
   </details>
 
-  <button class="finish" type="button" style="left:813px;top:727px" onclick="location.href='add-note-complete.html'">Finish Adding Note</button>
+  <button id="finish-note" class="finish" type="button" style="left:813px;top:727px">Finish Adding Note</button>
 
 </main>
+<script src="app.js"></script>
 </body>
 </html>
