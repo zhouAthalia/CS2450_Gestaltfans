@@ -2,6 +2,7 @@
 const TASKS_KEY = "gestaltfans.tasks";
 const CATEGORIES_KEY = "gestaltfans.taskCategories";
 const NOTES_KEY = "gestaltfans.notes";
+const FOOD_METER_KEY = "gestaltfans.foodMeter";
 
 //limit note's detail shown on Notes page (detail is shown when note is clicked on)
 const NOTE_PREVIEW_LIMIT = 120;
@@ -50,6 +51,126 @@ function saveNotes(notes) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
 }
 
+//read current food meter value, keeping it between 0 and 10 (may need to be adjusted)
+function loadFoodMeter() {
+    const savedValue = Number(localStorage.getItem(FOOD_METER_KEY));
+    return Number.isFinite(savedValue)
+        ? Math.min(10, Math.max(0, savedValue))
+        : 0;
+}
+
+//save the food meter value for use on every page.
+function saveFoodMeter(value) {
+    localStorage.setItem(FOOD_METER_KEY, String(Math.min(10, Math.max(0, value))));
+}
+
+//feed pet by spending one point from food meter
+function feedPet() {
+    saveFoodMeter(loadFoodMeter() - 1);
+    updateFoodMeterDisplays();
+}
+
+//update every visible food meter in shared profile header
+function updateFoodMeterDisplays() {
+    document.querySelectorAll(".xp").forEach((meter) => {
+        meter.textContent = `${loadFoodMeter()}/10`;
+    });
+}
+
+//move completed task progress into food meter and start next day
+function rollProgress(button) {
+    const tasks = loadTasks();
+    const earnedFood = tasks
+        .filter((task) => task.completed)
+        .reduce((total, task) => total + (Number(task.difficulty) || 0), 0);
+
+    const currentFood = loadFoodMeter();
+    const newFood = Math.min(10, currentFood + earnedFood);
+    saveFoodMeter(newFood);
+
+    //remove completed tasks after their progress has been awarded
+    saveTasks(tasks.filter((task) => !task.completed));
+    updateFoodMeterDisplays();
+
+    const originalText = button.textContent;
+    button.textContent = earnedFood > 0
+        ? `+${earnedFood} Food`
+        : "No Food Added";
+    button.disabled = true;
+
+    window.setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+    }, 1800);
+}
+
+//add progress control to shared header on every page
+function initializeProgressControls() {
+    updateFoodMeterDisplays();
+
+    document.querySelectorAll(".profile").forEach((profile) => {
+        if (profile.querySelector(".next-day-btn")) return;
+
+        const feedButton = profile.querySelector(".feed-btn");
+        if (feedButton && !feedButton.dataset.feedInitialized) {
+            feedButton.addEventListener("click", feedPet);
+            feedButton.dataset.feedInitialized = "true";
+        }
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "next-day-btn";
+        button.textContent = "Go to Next Day";
+        button.setAttribute(
+            "aria-label",
+            "Go to the next day and add completed task progress to the food meter"
+        );
+        button.addEventListener("click", () => rollProgress(button));
+
+        if (feedButton) {
+            feedButton.insertAdjacentElement("afterend", button);
+        } else {
+            profile.appendChild(button);
+        }
+    });
+}
+
+//populate a category dropdown with categories saved by user
+function populateCategoryOptions(listSelector, dataAttribute, selectedCategories = []) {
+    const categoryList = document.querySelector(listSelector);
+    if (!categoryList) return;
+
+    const savedCategories = loadCategories();
+    const categoryNames = [...new Set([
+        ...savedCategories.map((category) => category.name),
+        ...selectedCategories,
+        ...(savedCategories.length === 0 && selectedCategories.length === 0
+            ? ["Category 1", "Category 2", "Category 3"]
+            : [])
+    ])];
+
+    categoryList.replaceChildren();
+
+    categoryNames.forEach((categoryName) => {
+        const item = document.createElement("li");
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset[dataAttribute] = categoryName;
+        checkbox.checked = selectedCategories.includes(categoryName);
+
+        label.append(checkbox, document.createTextNode(` ${categoryName}`));
+        item.appendChild(label);
+        categoryList.appendChild(item);
+    });
+
+    if (categoryNames.length === 0) {
+        const empty = document.createElement("li");
+        empty.textContent = "No categories available yet.";
+        categoryList.appendChild(empty);
+    }
+}
+
 //set up form used for creating new note and editing existing note
 function initializeAddNotePage() {
     //find controls that are only present on add-note.html
@@ -64,6 +185,12 @@ function initializeAddNotePage() {
     const noteToEdit = noteId ? notes.find((note) => String(note.id) === noteId) : null;
     let difficulty = noteToEdit?.difficulty || 0;
     const stars = [...document.querySelectorAll(".dstar")];
+    const selectedCategories = Array.isArray(noteToEdit?.categories)
+        ? noteToEdit.categories
+        : [];
+
+    //use saved categories when creating or editing a note
+    populateCategoryOptions(".dropdown--lg ul", "noteCategory", selectedCategories);
 
     if (noteToEdit) {
         //fill form with selected note's existing values
@@ -72,7 +199,6 @@ function initializeAddNotePage() {
         finishButton.textContent = "Save Changes";
         titleInput.value = noteToEdit.title || "";
         detailsInput.value = noteToEdit.details || "";
-        const selectedCategories = Array.isArray(noteToEdit.categories) ? noteToEdit.categories : [];
         document.querySelectorAll("[data-note-category]").forEach((checkbox) => {
             checkbox.checked = selectedCategories.includes(checkbox.dataset.noteCategory);
         });
@@ -587,6 +713,7 @@ function initializeAddCategoryPage() {
 }
 
 function initializeApp() {
+    initializeProgressControls();
     initializeAddNotePage();
     initializeAddTaskPage();
     initializeAddCategoryPage();
