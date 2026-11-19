@@ -26,6 +26,20 @@ function saveCategories(categories) {
     localStorage.setItem(CATEGORIES_KEY, JSON.stringify(categories));
 }
 
+//return id from an edit URL, or null when form is creating a new item
+function getEditId() {
+    return new URLSearchParams(window.location.search).get("id");
+}
+
+//confirmation query parameters are one time messages so remove them beforere-rendering page after an item is removed
+function clearTaskPageConfirmationParams() {
+    const url = new URL(window.location.href);
+    ["added", "updated", "categoryAdded", "categoryUpdated"].forEach((parameter) => {
+        url.searchParams.delete(parameter);
+    });
+    window.history.replaceState({}, "", url);
+}
+
 //read saved notes from localStorage
 function loadNotes() {
   return JSON.parse(localStorage.getItem(NOTES_KEY) || "[]");
@@ -175,8 +189,53 @@ function initializeAddTaskPage() {
     const nameInput = document.querySelector("#task-name");
     if (!finishButton || !nameInput) return;
 
+    const taskId = getEditId();
+    const tasks = loadTasks();
+    const taskToEdit = taskId ? tasks.find((task) => String(task.id) === taskId) : null;
+
     //keep track of difficulty stars the user selected
-    let difficulty = 0;
+    let difficulty = taskToEdit?.difficulty || 0;
+
+    if (taskToEdit) {
+        document.title = "Edit Task";
+        nameInput.value = taskToEdit.title || "";
+        document.querySelector("#task-details").value = taskToEdit.details || "";
+        document.querySelector("#task-date").value = taskToEdit.dueDate || "";
+        finishButton.textContent = "Save Task Changes";
+    }
+
+    //build category options from saved categories so edits use current data
+    const categoryList = document.querySelector(".dropdown--lg ul");
+    const savedCategories = loadCategories();
+    const existingTaskCategories = Array.isArray(taskToEdit?.categories) ? taskToEdit.categories : [];
+    const categoryNames = [...new Set([
+        ...savedCategories.map((category) => category.name),
+        ...existingTaskCategories,
+        ...(savedCategories.length === 0 && existingTaskCategories.length === 0
+            ? ["Category 1", "Category 2", "Category 3"]
+            : [])
+    ])];
+    if (categoryList) {
+        categoryList.replaceChildren();
+
+        categoryNames.forEach((categoryName) => {
+            const item = document.createElement("li");
+            const label = document.createElement("label");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.dataset.taskCategory = categoryName;
+            checkbox.checked = existingTaskCategories.includes(categoryName);
+            label.append(checkbox, document.createTextNode(` ${categoryName}`));
+            item.appendChild(label);
+            categoryList.appendChild(item);
+        });
+
+        if (categoryNames.length === 0) {
+            const empty = document.createElement("li");
+            empty.textContent = "No categories available yet.";
+            categoryList.appendChild(empty);
+        }
+    }
 
     //find the five difficulty stars on the task form
     const stars = document.querySelectorAll(".dstar");
@@ -189,6 +248,8 @@ function initializeAddTaskPage() {
             item.classList.toggle("on", itemIndex < difficulty);
             });
         });
+
+        star.classList.toggle("on", index < difficulty);
     });
 
     finishButton.addEventListener("click", () => {
@@ -202,21 +263,24 @@ function initializeAddTaskPage() {
         const categories = [...document.querySelectorAll("[data-task-category]")].filter((checkbox) => checkbox.checked)
         .map((checkbox) => checkbox.dataset.taskCategory);
 
-        const tasks = loadTasks();
-        //add new task to the existing array and save the updated array
-        tasks.push( {
-            id: Date.now(),
+        //reuse existing id and completion state during an edit
+        const task = {
+            id: taskToEdit ? taskToEdit.id : Date.now(),
             title,
             details: document.querySelector("#task-details").value.trim(),
             difficulty,
             dueDate: document.querySelector("#task-date").value,
             categories,
-            completed: false
-        });
+            completed: taskToEdit ? Boolean(taskToEdit.completed) : false
+        };
 
-        saveTasks(tasks);
-        // Return to the actual tasks page after saving the task.
-        window.location.href = "tasks_page.html?added=1";
+        const updatedTasks = taskToEdit
+            ? tasks.map((savedTask) => savedTask.id === taskToEdit.id ? task : savedTask)
+            : [...tasks, task];
+
+        saveTasks(updatedTasks);
+        //return to actual tasks page after saving task
+        window.location.href = `tasks_page.html?${taskToEdit ? "updated=1" : "added=1"}`;
     });
 }
 
@@ -249,6 +313,22 @@ function initializeTaskPage() {
             categoryList.appendChild(confirmation);
         }
 
+        if (new URLSearchParams(window.location.search).has("categoryUpdated")) {
+            const confirmation = document.createElement("div");
+            confirmation.className = "category-confirmation";
+            confirmation.textContent = "Category updated successfully!";
+
+            const closeButton = document.createElement("button");
+            closeButton.className = "category-confirmation-close";
+            closeButton.type = "button";
+            closeButton.setAttribute("aria-label", "Close confirmation");
+            closeButton.textContent = "×";
+            closeButton.addEventListener("click", () => confirmation.remove());
+
+            confirmation.appendChild(closeButton);
+            categoryList.appendChild(confirmation);
+        }
+
         if (categories.length === 0) {
             const emptyCategories = document.createElement("p");
             emptyCategories.className = "category-empty";
@@ -260,7 +340,48 @@ function initializeTaskPage() {
             categories.forEach((category) => {
             const categoryCard = document.createElement("div");
             categoryCard.className = "saved-category-card";
-            categoryCard.textContent = category.name;
+
+            const categoryName = document.createElement("span");
+            categoryName.className = "saved-category-name";
+            categoryName.textContent = category.name;
+
+            const categoryActions = document.createElement("div");
+            categoryActions.className = "saved-item-actions";
+
+            const editButton = document.createElement("button");
+            editButton.type = "button";
+            editButton.className = "item-action item-action--edit";
+            editButton.textContent = "Edit";
+            editButton.addEventListener("click", () => {
+                window.location.href = `add-category-task.html?id=${encodeURIComponent(category.id)}`;
+            });
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "item-action item-action--remove";
+            removeButton.textContent = "Remove";
+            removeButton.addEventListener("click", () => {
+                if (!window.confirm(`Remove the category “${category.name}”?`)) return;
+
+                const remainingCategories = loadCategories().filter(
+                    (savedCategory) => savedCategory.id !== category.id
+                );
+                saveCategories(remainingCategories);
+
+                //detach removed category from every task that used it
+                const updatedTasks = loadTasks().map((task) => ({
+                    ...task,
+                    categories: Array.isArray(task.categories)
+                        ? task.categories.filter((name) => name !== category.name)
+                        : []
+                }));
+                saveTasks(updatedTasks);
+                clearTaskPageConfirmationParams();
+                initializeTaskPage();
+            });
+
+            categoryActions.append(editButton, removeButton);
+            categoryCard.append(categoryName, categoryActions);
             categoryList.appendChild(categoryCard);
             });
         }
@@ -271,6 +392,23 @@ function initializeTaskPage() {
         confirmation.className = "task-confirmation";
         const confirmationText = document.createElement("span");
         confirmationText.textContent = "Task added successfully!";
+
+        const closeButton = document.createElement("button");
+        closeButton.className = "task-confirmation-close";
+        closeButton.type = "button";
+        closeButton.setAttribute("aria-label", "Close confirmation");
+        closeButton.textContent = "×";
+        closeButton.addEventListener("click", () => confirmation.remove());
+
+        confirmation.append(confirmationText, closeButton);
+        taskList.appendChild(confirmation);
+    }
+
+    if (new URLSearchParams(window.location.search).has("updated")) {
+        const confirmation = document.createElement("div");
+        confirmation.className = "task-confirmation";
+        const confirmationText = document.createElement("span");
+        confirmationText.textContent = "Task updated successfully!";
 
         const closeButton = document.createElement("button");
         closeButton.className = "task-confirmation-close";
@@ -332,6 +470,31 @@ function initializeTaskPage() {
         card.appendChild(row);
         card.appendChild(difficulty);
 
+        const taskActions = document.createElement("div");
+        taskActions.className = "saved-item-actions saved-task-actions";
+
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className = "item-action item-action--edit";
+        editButton.textContent = "Edit";
+        editButton.addEventListener("click", () => {
+            window.location.href = `add-task.html?id=${encodeURIComponent(task.id)}`;
+        });
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "item-action item-action--remove";
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener("click", () => {
+            if (!window.confirm(`Remove the task “${task.title}”?`)) return;
+            saveTasks(loadTasks().filter((savedTask) => savedTask.id !== task.id));
+            clearTaskPageConfirmationParams();
+            initializeTaskPage();
+        });
+
+        taskActions.append(editButton, removeButton);
+        card.appendChild(taskActions);
+
         if (task.details) {
             const details = document.createElement("p");
             details.className = "saved-task-details";
@@ -371,6 +534,20 @@ function initializeAddCategoryPage() {
     const nameInput = document.querySelector("#category-name");
     if (!finishButton || !nameInput) return;
 
+    const categoryId = getEditId();
+    const categories = loadCategories();
+    const categoryToEdit = categoryId
+        ? categories.find((category) => String(category.id) === categoryId)
+        : null;
+
+    if (categoryToEdit) {
+        document.title = "Edit Category";
+        document.querySelector("h2").textContent = "Edit Category";
+        nameInput.value = categoryToEdit.name || "";
+        document.querySelector("#category-details").value = categoryToEdit.details || "";
+        finishButton.textContent = "Save Category Changes";
+    }
+
     finishButton.addEventListener("click", () => {
         const name = nameInput.value.trim();
         if (!name) {
@@ -378,17 +555,34 @@ function initializeAddCategoryPage() {
             return;
         }
 
-        const categories = loadCategories();
-        categories.push({
-            //add new category to saved categories array
-            id: Date.now(),
+        const category = {
+            //reuse existing id during an edit
+            id: categoryToEdit ? categoryToEdit.id : Date.now(),
             name,
             details: document.querySelector("#category-details").value.trim()
-        });
+        };
 
-        saveCategories(categories);
-        // Return to the actual tasks page after saving the category.
-        window.location.href = "tasks_page.html?categoryAdded=1";
+        const updatedCategories = categoryToEdit
+            ? categories.map((savedCategory) => savedCategory.id === categoryToEdit.id ? category : savedCategory)
+            : [...categories, category];
+
+        saveCategories(updatedCategories);
+
+        //if category was renamed, update task references to new name
+        if (categoryToEdit && categoryToEdit.name !== category.name) {
+            const updatedTasks = loadTasks().map((task) => ({
+                ...task,
+                categories: Array.isArray(task.categories)
+                    ? task.categories.map((taskCategory) =>
+                        taskCategory === categoryToEdit.name ? category.name : taskCategory
+                    )
+                    : []
+            }));
+            saveTasks(updatedTasks);
+        }
+
+        //return to actual tasks page after saving the category
+        window.location.href = `tasks_page.html?${categoryToEdit ? "categoryUpdated=1" : "categoryAdded=1"}`;
     });
 }
 
