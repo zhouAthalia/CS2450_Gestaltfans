@@ -3,7 +3,7 @@ const TASKS_KEY = "gestaltfans.tasks";
 const CATEGORIES_KEY = "gestaltfans.taskCategories";
 const NOTES_KEY = "gestaltfans.notes";
 
-//limit note's detail shown on Notes page
+//limit note's detail shown on Notes page (detail is shown when note is clicked on)
 const NOTE_PREVIEW_LIMIT = 120;
 
 //read saved tasks from localStorage, uses empty array when no tasks saved
@@ -209,6 +209,7 @@ function initializeAddTaskPage() {
             title,
             details: document.querySelector("#task-details").value.trim(),
             difficulty,
+            dueDate: document.querySelector("#task-date").value,
             categories,
             completed: false
         });
@@ -220,7 +221,7 @@ function initializeAddTaskPage() {
 }
 
 function initializeTaskPage() {
-    //task list only present on tasks_page.html
+    //task list only present on tasks_page.html (for now*)
     const taskList = document.querySelector("#task-list");
     if (!taskList) return;
 
@@ -336,6 +337,21 @@ function initializeTaskPage() {
             details.className = "saved-task-details";
             details.textContent = task.details;
             card.appendChild(details);
+        }
+
+        if (task.dueDate) {
+            const date = document.createElement("p");
+            date.className = "saved-task-date";
+            const [year, month, day] = task.dueDate.split("-");
+            const formattedDate = new Date(Number(year), Number(month) - 1, Number(day))
+                .toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric"
+                });
+
+            date.textContent = `Due: ${formattedDate}`;
+            card.appendChild(date);
         }
 
         if (categories.length > 0) {

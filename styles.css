@@ -121,6 +121,34 @@ body {
   overflow-wrap: anywhere;
 }
 
+.saved-task-date {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.task-date-label {
+    position: absolute;
+    left: 813px;
+    top: 600px;
+    font-size: 28px;
+}
+
+.date-field {
+    position: absolute;
+    left: 813px;
+    top: 650px;
+    width: 449px;
+    height: 58px;
+    padding: 0 12px;
+    border: 2px solid var(--black);
+    background: var(--white);
+    color: var(--black);
+    font: inherit;
+    font-size: 24px;
+}
+
 .task-confirmation {
   position: relative;
   width: 100%;
