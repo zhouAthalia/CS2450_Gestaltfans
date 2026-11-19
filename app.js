@@ -2,6 +2,7 @@
 const TASKS_KEY = "gestaltfans.tasks";
 const CATEGORIES_KEY = "gestaltfans.taskCategories";
 const NOTES_KEY = "gestaltfans.notes";
+const FOOD_METER_KEY = "gestaltfans.foodMeter";
 
 //limit note's detail shown on Notes page (detail is shown when note is clicked on)
 const NOTE_PREVIEW_LIMIT = 120;
@@ -48,6 +49,90 @@ function loadNotes() {
 //save current notes array in localStorage
 function saveNotes(notes) {
   localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+}
+
+//read current food meter value, keeping it between 0 and 10 (may need to be adjusted)
+function loadFoodMeter() {
+    const savedValue = Number(localStorage.getItem(FOOD_METER_KEY));
+    return Number.isFinite(savedValue)
+        ? Math.min(10, Math.max(0, savedValue))
+        : 0;
+}
+
+//save the food meter value for use on every page.
+function saveFoodMeter(value) {
+    localStorage.setItem(FOOD_METER_KEY, String(Math.min(10, Math.max(0, value))));
+}
+
+//feed pet by spending one point from food meter
+function feedPet() {
+    saveFoodMeter(loadFoodMeter() - 1);
+    updateFoodMeterDisplays();
+}
+
+//update every visible food meter in shared profile header
+function updateFoodMeterDisplays() {
+    document.querySelectorAll(".xp").forEach((meter) => {
+        meter.textContent = `${loadFoodMeter()}/10`;
+    });
+}
+
+//move completed task progress into food meter and start next day
+function rollProgress(button) {
+    const tasks = loadTasks();
+    const earnedFood = tasks
+        .filter((task) => task.completed)
+        .reduce((total, task) => total + (Number(task.difficulty) || 0), 0);
+
+    const currentFood = loadFoodMeter();
+    const newFood = Math.min(10, currentFood + earnedFood);
+    saveFoodMeter(newFood);
+
+    //remove completed tasks after their progress has been awarded
+    saveTasks(tasks.filter((task) => !task.completed));
+    updateFoodMeterDisplays();
+
+    const originalText = button.textContent;
+    button.textContent = earnedFood > 0
+        ? `+${earnedFood} Food`
+        : "No Food Added";
+    button.disabled = true;
+
+    window.setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+    }, 1800);
+}
+
+//add progress control to shared header on every page
+function initializeProgressControls() {
+    updateFoodMeterDisplays();
+
+    document.querySelectorAll(".profile").forEach((profile) => {
+        if (profile.querySelector(".next-day-btn")) return;
+
+        const feedButton = profile.querySelector(".feed-btn");
+        if (feedButton && !feedButton.dataset.feedInitialized) {
+            feedButton.addEventListener("click", feedPet);
+            feedButton.dataset.feedInitialized = "true";
+        }
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "next-day-btn";
+        button.textContent = "Go to Next Day";
+        button.setAttribute(
+            "aria-label",
+            "Go to the next day and add completed task progress to the food meter"
+        );
+        button.addEventListener("click", () => rollProgress(button));
+
+        if (feedButton) {
+            feedButton.insertAdjacentElement("afterend", button);
+        } else {
+            profile.appendChild(button);
+        }
+    });
 }
 
 //populate a category dropdown with categories saved by user
@@ -628,6 +713,7 @@ function initializeAddCategoryPage() {
 }
 
 function initializeApp() {
+    initializeProgressControls();
     initializeAddNotePage();
     initializeAddTaskPage();
     initializeAddCategoryPage();

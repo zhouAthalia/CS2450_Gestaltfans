@@ -388,6 +388,29 @@ body {
   cursor: pointer;
 }
 
+.next-day-btn {
+  height: 32px;
+  padding: 0 10px;
+  background: var(--finish-on);
+  border: 1px solid var(--black);
+  color: var(--black);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.next-day-btn:hover,
+.next-day-btn:focus-visible {
+  background: var(--accent);
+}
+
+.next-day-btn:disabled {
+  opacity: 0.75;
+  cursor: default;
+}
+
 .xp {
   position: static;
   font-size: 14px;
